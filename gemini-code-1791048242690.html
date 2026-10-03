@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora PRO Top Eleven - Ricardo Pinot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-main: #0b1329;
+            --card-bg: #132247;
+            --card-border: #1e3a75;
+            --accent-green: #00ff88;  
+            --accent-red: #ff3366;    
+            --accent-blue: #00d4ff;   
+            --accent-gold: #ffcc00;   
+            --accent-orange: #ff8800; 
+            --accent-pro: #9d4edd;
+            --text-light: #f0f6ff;
+            --text-dim: #8a9fc2;
+            
+            --estrella-amarilla-hex: #ffcc00;
+            --estrella-naranja-hex: #ff8800;
+            --estrella-roja-hex: #ff3366;
+            --estrella-rosa-hex: #ff66cc;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 0%, #1a2c5b 0%, #0b1329 70%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: rgba(19, 34, 71, 0.85);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header-title h1 {
+            font-family: 'Teko', sans-serif;
+            font-size: 42px;
+            margin: 0;
+            background: linear-gradient(180deg, #ffffff 0%, var(--accent-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .author-tag { color: var(--accent-gold); font-size: 14px; font-weight: 700; text-transform: uppercase; }
+
+        .pro-badge {
+            background: linear-gradient(45deg, #7b2cbf, #9d4edd);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.5);
+            border: 1px solid #c77dff;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: #080f21;
+            border: 1px solid var(--card-border);
+            color: var(--text-dim);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: 'Teko', sans-serif;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: bold;
+        }
+
+        .tab-btn:hover { background: #1e3a75; color: #fff; }
+        .tab-btn.active {
+            background: linear-gradient(90deg, #7b2cbf, #9d4edd);
+            color: white;
+            border-color: #c77dff;
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .section-header {
+            background: linear-gradient(90deg, #1e3a75 0%, #0d1b3a 100%);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border-left: 5px solid var(--accent-pro);
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header h2 { font-family: 'Teko', sans-serif; font-size: 28px; margin: 0; }
+
+        .football-field {
+            width: 100%;
+            height: 520px;
+            background: linear-gradient(180deg, #1b4d3e 0%, #12382c 100%);
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.6);
+            touch-action: none;
+        }
+        .football-field::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 2px;
+            background: rgba(255,255,255,0.25);
+        }
+        .center-circle {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px; height: 100px;
+            border: 2px solid rgba(255,255,255,0.25);
+            border-radius: 50%;
+        }
+        .penalty-box-top {
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 220px; height: 80px;
+            border: 2px solid rgba(255,255,255,0.25);
+            border-top: none;
+        }
+        .penalty-box-bottom {
+            position: absolute;
+            bottom: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 220px; height: 80px;
+            border: 2px solid rgba(255,255,255,0.25);
+            border-bottom: none;
+        }
+
+        .field-player {
+            position: absolute;
+            background: rgba(8, 15, 33, 0.95);
+            padding: 5px 10px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: grab;
+            user-select: none;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            z-index: 5;
+        }
+        .field-player:active { cursor: grabbing; z-index: 100; }
+        
+        .fp-ST  { border: 2px solid var(--accent-red); box-shadow: 0 0 10px rgba(255, 51, 102, 0.4); }
+        .fp-ATQ { border: 2px solid var(--accent-orange); box-shadow: 0 0 10px rgba(255, 136, 0, 0.4); }
+        .fp-MED { border: 2px solid var(--accent-gold); box-shadow: 0 0 10px rgba(255, 204, 0, 0.4); }
+        .fp-DEF { border: 2px solid var(--accent-green); box-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
+        .fp-GK  { border: 2px solid var(--accent-blue); box-shadow: 0 0 10px rgba(0, 212, 255, 0.4); }
+
+        .fp-name { font-size: 11px; font-weight: bold; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; pointer-events: none; }
+        .fp-stars { font-size: 11px; line-height: 1; margin-top: 2px; pointer-events: none; }
+
+        .vestuario-grid { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; }
+        .player-card {
+            background: #080f21;
+            border: 2px solid var(--card-border);
+            padding: 15px 12px;
+            border-radius: 10px;
+            min-width: 190px;
+            max-width: 190px;
+            text-align: center;
+            position: relative;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .rol-ST  { border-color: var(--accent-red); box-shadow: inset 0 0 15px rgba(255, 51, 102, 0.1); }
+        .rol-ATQ { border-color: var(--accent-orange); box-shadow: inset 0 0 15px rgba(255, 136, 0, 0.1); }
+        .rol-MED { border-color: var(--accent-gold); box-shadow: inset 0 0 15px rgba(255, 204, 0, 0.1); }
+        .rol-DEF { border-color: var(--accent-green); box-shadow: inset 0 0 15px rgba(0, 255, 136, 0.1); }
+        .rol-GK  { border-color: var(--accent-blue); box-shadow: inset 0 0 15px rgba(0, 212, 255, 0.1); }
+        
+        .rol-ADD { border-color: var(--accent-pro); border-style: dashed; background: rgba(157, 78, 221, 0.05); display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
+        .rol-ADD:hover { background: rgba(157, 78, 221, 0.15); border-color: #c77dff; }
+
+        .rol-tag { font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 5px; }
+        .bg-ST  { background: var(--accent-red); color: #fff; font-weight: bold; }
+        .bg-ATQ { background: var(--accent-orange); color: #000; font-weight: bold; }
+        .bg-MED { background: var(--accent-gold); color: #000; font-weight: bold; }
+        .bg-DEF { background: var(--accent-green); color: #000; font-weight: bold; }
+        .bg-GK  { background: var(--accent-blue); color: #000; font-weight: bold; }
+
+        .player-card h4 { margin: 0 0 5px 0; color: #fff; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .stars-container { font-size: 24px; letter-spacing: 1px; margin-bottom: 4px; text-shadow: 0 0 8px rgba(0,0,0,0.6); line-height: 1.1; }
+        .estrella-amarilla { color: #ffcc00; text-shadow: 0 0 8px rgba(255, 204, 0, 0.6); }
+        .estrella-naranja { color: #ff8800; text-shadow: 0 0 8px rgba(255, 136, 0, 0.6); }
+        .estrella-roja { color: #ff3366; text-shadow: 0 0 8px rgba(255, 51, 102, 0.6); }
+        .estrella-rosa { color: #ff66cc; text-shadow: 0 0 8px rgba(255, 102, 204, 0.6); }
+
+        .gen-text { font-size: 16px; color: var(--text-light); font-weight: bold; display: block; margin-top: 4px; }
+        .edad-text { color: var(--text-dim); font-size: 12px; display: block; margin-bottom: 10px; }
+        
+        .player-actions { display: flex; gap: 5px; }
+        .btn-card { flex: 1; padding: 5px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-load { background: #3a5b99; color: #fff; }
+        .btn-load:hover { background: #4a74c4; }
+        .btn-delete { background: var(--accent-red); color: #fff; }
+
+        .player-form {
+            background: #080f21;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .form-group { display: flex; flex-direction: column; flex: 1; min-width: 120px; }
+        .form-group.edad-group { flex: 0 0 80px; min-width: 80px; }
+        .form-group.nombre-group { flex: 0 0 22%; min-width: 140px; }
+        .form-group label { margin-top: 0; color: var(--accent-pro); font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+        
+        .gen-display-wrapper { display: flex; align-items: center; gap: 10px; }
+        
+        .player-form input, .player-form select {
+            padding: 10px; border: 1px solid var(--card-border); border-radius: 6px;
+            background: #132247; color: #fff; font-size: 14px; font-weight: bold;
+        }
+        .player-form input:focus, .player-form select:focus { border-color: var(--accent-pro); outline: none; }
+        
+        select option { font-weight: bold; background-color: #132247; color: #fff; }
+
+        .btn-save {
+            background: linear-gradient(90deg, #7b2cbf, #9d4edd); color: white; border: none;
+            padding: 10px 20px; border-radius: 6px; font-family: 'Teko', sans-serif;
+            font-size: 20px; cursor: pointer; height: 100%; margin-top: 20px; transition: 0.2s;
+        }
+        .btn-save:hover { box-shadow: 0 0 15px rgba(157, 78, 221, 0.6); }
+
+        .selector-bar {
+            background: #080f21;
+            border: 1px solid var(--card-border);
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        .selector-bar select {
+            flex: 1; padding: 10px; background: #132247; color: #fff;
+            border: 1px solid var(--card-border); border-radius: 6px; font-size: 16px; font-weight: bold;
+        }
+
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 350px; gap: 20px; margin-bottom: 25px; }
+        @media (max-width: 850px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        
+        .radar-container { background: #080f21; border-radius: 12px; padding: 15px; border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; }
+        
+        .grid-attrs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .card { background: var(--card-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--card-border); }
+        
+        .card-header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid; padding-bottom: 5px; margin-bottom: 8px; }
+        .card h3 { font-family: 'Teko', sans-serif; font-size: 20px; margin: 0; }
+        .category-total { font-family: 'Teko', sans-serif; font-size: 18px; font-weight: bold; background: #080f21; padding: 1px 6px; border-radius: 4px; border: 1px solid; }
+
+        .card-defensa h3, .card-defensa .category-total { color: var(--accent-green); border-color: var(--accent-green); }
+        .card-ataque h3, .card-ataque .category-total { color: var(--accent-red); border-color: var(--accent-red); }
+        .card-fisico h3, .card-fisico .category-total { color: var(--accent-blue); border-color: var(--accent-blue); }
+
+        /* NUEVOS ESTILOS: Atributo al lado del input y ancho reducido a un tercio */
+        .attr-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 6px;
+        }
+        .card label { 
+            font-size: 11px; 
+            font-weight: 700; 
+            color: var(--text-dim); 
+            text-transform: uppercase; 
+            margin: 0;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 5px;
+        }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        .card input[type=number] {
+            -moz-appearance: textfield; 
+            width: 32%; /* Reducido a aproximadamente un tercio */
+            padding: 5px 6px; 
+            border: 1px solid var(--card-border); 
+            border-radius: 6px; 
+            font-size: 12px; 
+            background: #080f21; 
+            color: #fff; 
+            font-weight: bold;
+            text-align: center;
+        }
+        .card input:focus { border-color: var(--accent-green); outline: none; box-shadow: 0 0 8px rgba(0, 255, 136, 0.4); }
+
+        .btn-group { display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap; }
+        .btn { flex: 1; min-width: 250px; padding: 15px; border: none; border-radius: 8px; font-family: 'Teko', sans-serif; font-size: 22px; cursor: pointer; transition: 0.2s; text-transform: uppercase; font-weight: bold; }
+        .btn-pro { background: linear-gradient(90deg, #7b2cbf, #9d4edd); color: white; }
+        .btn-pro:hover { box-shadow: 0 0 20px rgba(157, 78, 221, 0.6); }
+        .btn-campo { background: linear-gradient(180deg, #00ff88 0%, #009951 100%); color: #000; }
+        .btn-gk { background: linear-gradient(180deg, #00d4ff 0%, #0088cc 100%); color: #000; width: 100%; margin-top: 20px; }
+
+        .routine-slots { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .slot { background: #080f21; border: 1px solid var(--accent-green); padding: 15px; border-radius: 8px; flex: 1; min-width: 140px; text-align: center; }
+        .slot-name { font-weight: bold; font-size: 14px; margin-bottom: 3px; }
+        .slot-subname { font-size: 10px; color: var(--text-dim); display: block; margin-bottom: 5px; }
+        .slot-stats { font-size: 12px; color: var(--accent-gold); }
+        .energy-cost { text-align: center; margin-top: 15px; font-size: 18px; color: var(--accent-red); font-weight: bold; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #080f21; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--card-border); }
+        th { background-color: #1a2c5b; color: var(--text-light); font-family: 'Teko', sans-serif; font-size: 20px; letter-spacing: 1px; }
+        
+        .td-drill-name { font-weight: bold; }
+        .td-drill-sub { font-size: 11px; color: var(--text-dim); font-weight: normal; display: block; margin-top: 2px; }
+
+        .excelente { color: var(--accent-green); font-weight: bold; }
+        .bueno { color: var(--accent-gold); font-weight: bold; }
+        .ineficaz { color: var(--accent-red); font-weight: bold; }
+        tr:hover { background-color: rgba(255,255,255,0.03); }
+
+        .ej-ataque { color: var(--accent-red); }     
+        .ej-defensa { color: var(--accent-green); }   
+        .ej-fisico { color: var(--accent-blue); }     
+        .ej-posesion { color: var(--accent-gold); }   
+
+        .tool-card {
+            background: #080f21;
+            border: 1px solid var(--card-border);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .tool-card h3 { font-family: 'Teko', sans-serif; font-size: 24px; color: var(--accent-gold); margin-top: 0; }
+        .tool-card input {
+            padding: 10px; border: 1px solid var(--card-border); border-radius: 6px;
+            background: #132247; color: #fff; font-size: 14px; font-weight: bold; width: 100%; max-width: 250px;
+            margin-top: 5px; margin-bottom: 15px; display: block;
+        }
+        .tool-result { font-size: 18px; font-weight: bold; color: var(--accent-green); margin-top: 10px; padding: 10px; background: rgba(0,255,136,0.05); border-radius: 6px; border: 1px solid rgba(0,255,136,0.2); }
+
+        .badge-green  { background-color: rgba(0,255,136,0.12); color: var(--accent-green); font-weight: bold; }
+        .badge-yellow { background-color: rgba(255,204,0,0.12); color: var(--accent-gold); font-weight: bold; }
+        .badge-red    { background-color: rgba(255,51,102,0.12); color: var(--accent-red); font-weight: bold; }
+        #tabla-matriz-drills td { text-align: center; }
+        #tabla-matriz-drills td:first-child { text-align: left; }
+
+        .tablas-lado-a-lado { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+        @media (max-width: 900px) { .tablas-lado-a-lado { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">
+                <h1>⚽ CALCULADORA DE ENTRENAMIENTO</h1>
+                <div class="author-tag">Creado por Ricardo Pinot</div>
+            </div>
+            <div class="pro-badge">💎 USUARIO PRO</div>
+        </div>
+
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab(event, 'vestuario')">🏟️ Vestuario & Campo</button>
+            <button class="tab-btn" onclick="switchTab(event, 'calculadora')">⚡ Calculadora & Rutinas</button>
+            <button class="tab-btn" onclick="switchTab(event, 'porteros')">🥅 🧤 Porteros</button>
+            <button class="tab-btn" onclick="switchTab(event, 'simulador')">🔋 Simulador de Descansos</button>
+            <button class="tab-btn" onclick="switchTab(event, 'proyeccion')">📈 Proyección & Posiciones</button>
+        </div>
+
+        <div id="tab-vestuario" class="tab-content active">
+            <div class="section-header"><h2>💎 PLANTILLA DE TU VESTUARIO</h2></div>
+            <div class="vestuario-grid" id="vestuario-container"></div>
+            
+            <div class="section-header" style="margin-top: 30px;"><h2>⚽ ALINEACIÓN TÁCTICA EN CAMPO</h2></div>
+            <div class="football-field" id="football-field-container">
+                <div class="center-circle"></div>
+                <div class="penalty-box-top"></div>
+                <div class="penalty-box-bottom"></div>
+            </div>
+            <p style="color: var(--text-dim); margin-top: 10px; font-size: 14px;">💡 Arrastra y suelta **cualquier jugador** libremente por el campo para armar tu táctica. Hazles **doble clic** para cargarlos en la calculadora.</p>
+        </div>
+
+        <div id="tab-calculadora" class="tab-content">
+            <div class="player-form">
+                <div class="form-group nombre-group">
+                    <label>Nombre del Jugador</label>
+                    <input type="text" id="j-nombre" placeholder="Ej: Cristiano Ronaldo">
+                </div>
+                <div class="form-group edad-group">
+                    <label>Edad</label>
+                    <input type="number" id="j-edad" placeholder="18">
+                </div>
+                <div class="form-group">
+                    <label>Rol Principal (Top Eleven)</label>
+                    <select id="j-rol" onchange="autoCalcularGen()">
+                        <optgroup label="🔴 Delanteros">
+                            <option value="ST" style="color:var(--accent-red); font-weight:bold;">ST (Delantero Centro)</option>
+                        </optgroup>
+                        <optgroup label="🟠 Atacantes">
+                            <option value="AML" style="color:var(--accent-orange); font-weight:bold;">AML (Interior Izquierdo)</option>
+                            <option value="AMR" style="color:var(--accent-orange); font-weight:bold;">AMR (Interior Derecho)</option>
+                            <option value="AMC" style="color:var(--accent-orange); font-weight:bold;">AMC (Mediapunta)</option>
+                        </optgroup>
+                        <optgroup label="🟡 Mediocampistas">
+                            <option value="ML" style="color:var(--accent-gold); font-weight:bold;">ML (Interior Izquierdo)</option>
+                            <option value="MC" style="color:var(--accent-gold); font-weight:bold;">MC (Mediocampista Central)</option>
+                            <option value="MR" style="color:var(--accent-gold); font-weight:bold;">MR (Interior Derecho)</option>
+                            <option value="DMC" style="color:var(--accent-gold); font-weight:bold;">DMC (Mediocampista Defensivo)</option>
+                            <option value="DML" style="color:var(--accent-gold); font-weight:bold;">DML (Interior Defensivo Izquierdo)</option>
+                            <option value="DMR" style="color:var(--accent-gold); font-weight:bold;">DMR (Interior Defensivo Derecho)</option>
+                        </optgroup>
+                        <optgroup label="🟢 Defensas">
+                            <option value="DL" style="color:var(--accent-green); font-weight:bold;">DL (Lateral Izquierdo)</option>
+                            <option value="DC" style="color:var(--accent-green); font-weight:bold;">DC (Defensa Central)</option>
+                            <option value="DR" style="color:var(--accent-green); font-weight:bold;">DR (Lateral Derecho)</option>
+                        </optgroup>
+                        <optgroup label="🔵 Portero">
+                            <option value="GK" style="color:var(--accent-blue); font-weight:bold;">GK (Portero)</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>GEN % & Estrellas (Auto-calculado)</label>
+                    <div class="gen-display-wrapper">
+                        <input type="number" id="j-gen" placeholder="Ej: 120" style="width: 70px;">
+                        <div class="stars-container" id="j-stars"><span class="estrella-amarilla">★</span></div>
+                    </div>
+                </div>
+                <button class="btn-save" onclick="guardarJugador()">💾 Guardar</button>
+            </div>
+
+            <div class="section-header" style="border-left-color: var(--accent-green);">
+                <h2>🏃 JUGADORES DE CAMPO (21 Atributos Totales: 7 por Categoría)</h2>
+            </div>
+
+            <div class="selector-bar">
+                <span style="font-weight: bold; color: var(--accent-gold);">⚡ Cargar rápido desde Vestuario:</span>
+                <select id="select-jugador-rapido" onchange="seleccionarJugadorDesdeBarra(this.value)">
+                    <option value="">-- Selecciona un jugador --</option>
+                </select>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="grid-attrs" id="inputs-campo" oninput="actualizarYCalcular()">
+                    <!-- DEFENSA (7 Atributos) -->
+                    <div class="card card-defensa">
+                        <div class="card-header-flex">
+                            <h3>🛡️ Defensa</h3>
+                            <span class="category-total" id="total-defensa">0</span>
+                        </div>
+                        <div class="attr-row"><label>🛡️ Entradas:</label><input type="number" id="entradas"></div>
+                        <div class="attr-row"><label>🔒 Marcaje:</label><input type="number" id="marcaje"></div>
+                        <div class="attr-row"><label>📍 Colocación:</label><input type="number" id="colocacion"></div>
+                        <div class="attr-row"><label>🗣️ Cabeceado:</label><input type="number" id="cabeza"></div>
+                        <div class="attr-row"><label>🦁 Valentía:</label><input type="number" id="valentia"></div>
+                        <div class="attr-row"><label>⏱️ Anticipación:</label><input type="number" id="anticipacion"></div>
+                        <div class="attr-row"><label>🎯 Posicionamiento:</label><input type="number" id="posicionamiento"></div>
+                    </div>
+                    <!-- ATAQUE (7 Atributos) -->
+                    <div class="card card-ataque">
+                        <div class="card-header-flex">
+                            <h3>⚔️ Ataque</h3>
+                            <span class="category-total" id="total-ataque">0</span>
+                        </div>
+                        <div class="attr-row"><label>🎯 Pases:</label><input type="number" id="pases"></div>
+                        <div class="attr-row"><label>💫 Dribbling:</label><input type="number" id="dribble"></div>
+                        <div class="attr-row"><label>↗️ Centros:</label><input type="number" id="centros"></div>
+                        <div class="attr-row"><label>💥 Disparos:</label><input type="number" id="disparos"></div>
+                        <div class="attr-row"><label>⚽ Definición:</label><input type="number" id="definicion"></div>
+                        <div class="attr-row"><label>🎨 Técnica:</label><input type="number" id="tecnica"></div>
+                        <div class="attr-row"><label>💡 Creatividad:</label><input type="number" id="creatividad"></div>
+                    </div>
+                    <!-- FÍSICO (7 Atributos) -->
+                    <div class="card card-fisico">
+                        <div class="card-header-flex">
+                            <h3>💪 Físico & Mental</h3>
+                            <span class="category-total" id="total-fisico">0</span>
+                        </div>
+                        <div class="attr-row"><label>🔋 Resistencia:</label><input type="number" id="resistencia"></div>
+                        <div class="attr-row"><label>🏋️ Fuerza:</label><input type="number" id="fuerza"></div>
+                        <div class="attr-row"><label>🔥 Agresividad:</label><input type="number" id="agresividad"></div>
+                        <div class="attr-row"><label>⚡ Velocidad:</label><input type="number" id="velocidad"></div>
+                        <div class="attr-row"><label>🤸 Agilidad:</label><input type="number" id="agilidad"></div>
+                        <div class="attr-row"><label>🧘 Flexibilidad:</label><input type="number" id="flexibilidad"></div>
+                        <div class="attr-row"><label>👑 Liderazgo:</label><input type="number" id="liderazgo"></div>
+                    </div>
+                </div>
+                <div class="radar-container"><canvas id="radarChart"></canvas></div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-pro" onclick="generarRutina()">⚡ Generar 6 Entrenamientos PRO</button>
+                <button class="btn btn-campo" onclick="calcularCampo()">📋 Calcular</button>
+            </div>
+
+            <div id="resultado-rutina">
+                <div class="routine-slots" id="slots-container"></div>
+                <div class="energy-cost" id="energy-display"></div>
+            </div>
+
+            <div class="tablas-lado-a-lado">
+                <div>
+                    <table id="tabla-campo">
+                        <thead><tr><th>Ejercicio (Jugador de Campo)</th><th>Promedio %</th><th>Efectividad de XP</th></tr></thead>
+                        <tbody><tr><td colspan="3" style="text-align: center; color: var(--text-dim);">Haz clic en "Calcular" para ver todos los ejercicios.</td></tr></tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <div class="section-header"><h2>🧮 Matriz Dinámica de Drills</h2></div>
+                    <table id="tabla-matriz">
+                        <thead>
+                            <tr>
+                                <th>Ejercicio (Drill)</th>
+                                <th>Suma Atributos</th>
+                                <th>Promedio / Porcentaje (%)</th>
+                                <th>Estado de Eficiencia</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-matriz-drills">
+                            <tr><td colspan="4" style="text-align: center; color: var(--text-dim);">Haz clic en "Calcular" para ver todos los ejercicios.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-porteros" class="tab-content">
+            <div class="section-header" style="border-left-color: var(--accent-blue);">
+                <h2>🥅 🔐 CALCULADORA & ENTRENAMIENTO DE PORTEROS (GK)</h2>
+            </div>
+
+            <div class="player-form">
+                <div class="form-group nombre-group">
+                    <label>Nombre del Portero</label>
+                    <input type="text" id="gk-nombre" placeholder="Ej: Martin Zima">
+                </div>
+                <div class="form-group edad-group">
+                    <label>Edad</label>
+                    <input type="number" id="gk-edad" placeholder="19">
+                </div>
+                <div class="form-group">
+                    <label>GEN % & Estrellas (Auto-calculado)</label>
+                    <div class="gen-display-wrapper">
+                        <input type="number" id="gk-gen" placeholder="Ej: 112" style="width: 70px;">
+                        <div class="stars-container" id="gk-stars"><span class="estrella-amarilla">★</span></div>
+                    </div>
+                </div>
+                <button class="btn-save" onclick="guardarPorteroDirecto()">💾 Guardar GK</button>
+            </div>
+
+            <div class="grid-attrs" oninput="autoCalcularGenGK()">
+                <div class="card card-defensa">
+                    <div class="card-header-flex">
+                        <h3>🛡️ Defensa GK</h3>
+                        <span class="category-total" id="total-gk-def">0</span>
+                    </div>
+                    <div class="attr-row"><label>🦅 Reflejos:</label><input type="number" id="gk_reflejos"></div>
+                    <div class="attr-row"><label>🐈 Agilidad:</label><input type="number" id="gk_agilidad"></div>
+                    <div class="attr-row"><label>⏳ Anticipación:</label><input type="number" id="gk_anticipacion"></div>
+                    <div class="attr-row"><label>🧤 Salidas:</label><input type="number" id="gk_salidas"></div>
+                    <div class="attr-row"><label>🗣 Comunicación:</label><input type="number" id="gk_comunicacion"></div>
+                </div>
+                <div class="card card-ataque">
+                    <div class="card-header-flex">
+                        <h3>⚔️ Técnica GK</h3>
+                        <span class="category-total" id="total-gk-atk">0</span>
+                    </div>
+                    <div class="attr-row"><label>🤲 Saque mano:</label><input type="number" id="gk_saque_mano"></div>
+                    <div class="attr-row"><label>👟 Saque pie:</label><input type="number" id="gk_saque_pie"></div>
+                    <div class="attr-row"><label>🥊 Puños:</label><input type="number" id="gk_punos"></div>
+                    <div class="attr-row"><label>✈️ Alcance Aéreo:</label><input type="number" id="gk_alcance"></div>
+                    <div class="attr-row"><label>🎯 Concentración:</label><input type="number" id="gk_concentracion"></div>
+                </div>
+                <div class="card card-fisico">
+                    <div class="card-header-flex">
+                        <h3>💪 Físico GK</h3>
+                        <span class="category-total" id="total-gk-fis">0</span>
+                    </div>
+                    <div class="attr-row"><label>🔋 Forma Física:</label><input type="number" id="gk_forma"></div>
+                    <div class="attr-row"><label>🏋️ Fuerza GK:</label><input type="number" id="gk_fuerza"></div>
+                    <div class="attr-row"><label>🔥 Agresividad GK:</label><input type="number" id="gk_agresividad"></div>
+                    <div class="attr-row"><label>⚡ Velocidad GK:</label><input type="number" id="gk_velocidad"></div>
+                    <div class="attr-row"><label>🎨 Creatividad GK:</label><input type="number" id="gk_creatividad"></div>
+                </div>
+            </div>
+
+            <button class="btn btn-gk" onclick="calcularPortero()">🧤 Calcular Tabla Completa Portero</button>
+            <table id="tabla-portero">
+                <thead><tr><th>Ejercicio (Portero)</th><th>Promedio %</th><th>Efectividad de XP</th></tr></thead>
+                <tbody><tr><td colspan="3" style="text-align: center; color: var(--text-dim);">Ingresa atributos del GK y haz clic en calcular.</td></tr></tbody>
+            </table>
+        </div>
+
+        <div id="tab-simulador" class="tab-content">
+            <div class="section-header"><h2>🔋 Simulador de Gasto de Descansos (Rests)</h2></div>
+            <div class="tool-card">
+                <h3>Calculadora de Paquetes Verdes</h3>
+                <label>Paquetes de Descanso Disponibles:</label>
+                <input type="number" id="sim-rests" placeholder="Ej: 50" oninput="calcularSimuladorRests()">
+                
+                <label>Coste promedio de rutina seleccionada (%):</label>
+                <input type="number" id="sim-coste" value="10.5" oninput="calcularSimuladorRests()">
+                
+                <div class="tool-result" id="sim-resultado">✨ Ingresa la cantidad de paquetes para calcular las sesiones posibles.</div>
+            </div>
+        </div>
+
+        <div id="tab-proyeccion" class="tab-content">
+            <div class="section-header"><h2>📈 Proyección de Crecimiento & Multi-posiciones</h2></div>
+            <div class="tool-card">
+                <h3>Velocidad de Crecimiento por Edad (Fast Trainer)</h3>
+                <p style="color: var(--text-dim);">Los jugadores de 18 a 21 años absorben mucha más experiencia (XP) por cada drill completado en comparación con los veteranos.</p>
+                <label>Edad del jugador:</label>
+                <input type="number" id="proy-edad" value="18" oninput="calcularProyeccionEdad()">
+                <div class="tool-result" id="proy-resultado">🔥 Perfil: Fast Trainer Óptimo (Crecimiento x2.5)</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(evt, tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            evt.currentTarget.classList.add('active');
+            
+            if(tabId === 'vestuario') renderVestuario();
+        }
+
+        const attrsDefensa = ['entradas','marcaje','colocacion','cabeza','valentia','anticipacion','posicionamiento'];
+        const attrsAtaque = ['pases','dribble','centros','disparos','definicion','tecnica','creatividad'];
+        const attrsFisico = ['resistencia','fuerza','agresividad','velocidad','agilidad','flexibilidad','liderazgo'];
+        const attrsCampo = [...attrsDefensa, ...attrsAtaque, ...attrsFisico]; // 21 atributos exactos
+
+        const listaDrillsMatriz = [
+            { nombre: "Pasa y Dispara (Fácil)", attrs: ['pases', 'disparos', 'colocacion'] },
+            { nombre: "Contraataque Rápido (Muy Alto)", attrs: ['pases', 'centros', 'definicion', 'creatividad'] },
+            { nombre: "Técnica de Disparo (Medio)", attrs: ['disparos', 'definicion', 'tecnica'] },
+            { nombre: "Juego por las Bandas (Difícil)", attrs: ['centros', 'dribble', 'pases', 'cabeza'] },
+            { nombre: "1 contra 1 (Fácil)", attrs: ['definicion', 'entradas', 'colocacion'] },
+            { nombre: "Presionar el Balón", attrs: ['entradas', 'marcaje', 'anticipacion'] },
+            { nombre: "Piggy in the Middle", attrs: ['entradas', 'pases', 'valentia', 'colocacion'] },
+            { nombre: "Uso de la Cabeza", attrs: ['cabeza', 'valentia', 'posicionamiento'] },
+            { nombre: "Detener al Atacante", attrs: ['fuerza', 'dribble', 'entradas', 'marcaje', 'valentia'] },
+            { nombre: "Defensa de Centros", attrs: ['centros', 'marcaje', 'cabeza', 'anticipacion'] },
+            { nombre: "Video Analysis", attrs: ['creatividad', 'colocacion', 'liderazgo'] },
+            { nombre: "Línea Defensiva", attrs: ['marcaje', 'colocacion', 'posicionamiento'] },
+            { nombre: "Calentamiento", attrs: ['resistencia', 'agresividad', 'flexibilidad'] },
+            { nombre: "Estiramientos", attrs: ['resistencia', 'fuerza', 'velocidad', 'flexibilidad'] },
+            { nombre: "Sprint (Muy Duro)", attrs: ['resistencia', 'velocidad', 'dribble', 'agilidad'] },
+            { nombre: "Carioca con Escalera", attrs: ['agresividad', 'velocidad', 'agilidad'] },
+            { nombre: "Carrera Larga", attrs: ['resistencia', 'velocidad'] },
+            { nombre: "Gimnasio", attrs: ['resistencia', 'fuerza'] },
+            { nombre: "Shuttle Runs", attrs: ['fuerza', 'velocidad', 'valentia'] },
+            { nombre: "Hurdle Jumps", attrs: ['agresividad', 'velocidad', 'agilidad'] }
+        ];
+
+        function obtenerValorMatriz(id) {
+            const el = document.getElementById(id);
+            return el ? (parseFloat(el.value) || 0) : 0;
+        }
+
+        function calcularMatriz() {
+            let html = "";
+            listaDrillsMatriz.forEach(drill => {
+                const suma = drill.attrs.reduce((acc, id) => acc + obtenerValorMatriz(id), 0);
+                const promedio = suma / drill.attrs.length;
+
+                let badgeClase = "", badgeTexto = "";
+                if (promedio < 75) {
+                    badgeClase = "badge-green";
+                    badgeTexto = "🔥 Excelente [Alto XP]";
+                } else if (promedio <= 105) {
+                    badgeClase = "badge-yellow";
+                    badgeTexto = "⚡ Bueno [Estándar]";
+                } else {
+                    badgeClase = "badge-red";
+                    badgeTexto = "⚠ Ineficaz [Atributo Alto]";
+                }
+
+                html += `<tr>
+                    <td class="td-drill-name">${drill.nombre}</td>
+                    <td>${suma.toFixed(1)}</td>
+                    <td><b>${promedio.toFixed(2)}%</b></td>
+                    <td class="${badgeClase}">${badgeTexto}</td>
+                </tr>`;
+            });
+            document.getElementById("tabla-matriz-drills").innerHTML = html;
+        }
+
+        function generarEstrellas(gen) {
+            if (!gen || gen <= 0) return '<span class="estrella-amarilla">★</span>';
+            let valorEstrella = 20; 
+            let totalEstrellasMax = 12; 
+            let estrellasLlenas = Math.floor(gen / valorEstrella);
+            let resto = (gen % valorEstrella) / valorEstrella; 
+            
+            let htmlEstrellas = "";
+            let i = 1;
+
+            for (; i <= estrellasLlenas && i <= totalEstrellasMax; i++) {
+                let claseColor = obtenerClaseEstrella(i);
+                htmlEstrellas += `<span class="${claseColor}">★</span>`;
+            }
+
+            if (resto > 0 && i <= totalEstrellasMax) {
+                let claseColor = obtenerClaseEstrella(i);
+                let hexColor = getComputedStyle(document.documentElement).getPropertyValue(`--${claseColor}-hex`).trim();
+                let porcentajeRelleno = Math.round(resto * 100);
+                htmlEstrellas += `<span style="background: linear-gradient(90deg, ${hexColor} ${porcentajeRelleno}%, #444 ${porcentajeRelleno}%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">★</span>`;
+                i++;
+            }
+            return htmlEstrellas;
+        }
+
+        function obtenerClaseEstrella(i) {
+            if (i >= 10) return 'estrella-rosa';
+            if (i >= 8) return 'estrella-roja';
+            if (i >= 6) return 'estrella-naranja';
+            return 'estrella-amarilla';
+        }
+
+        const attrsGK = ['gk_reflejos','gk_agilidad','gk_anticipacion','gk_salidas','gk_comunicacion','gk_saque_mano','gk_saque_pie','gk_punos','gk_alcance','gk_concentracion','gk_forma','gk_fuerza','gk_agresividad','gk_velocidad','gk_creatividad'];
+
+        function autoCalcularGen() {
+            const getProm = (arr) => {
+                const vals = arr.map(id => parseFloat(document.getElementById(id).value) || 0);
+                const suma = vals.reduce((a, b) => a + b, 0);
+                return suma > 0 ? (suma / arr.length).toFixed(1) : 0;
+            };
+
+            let defP = getProm(attrsDefensa);
+            let atkP = getProm(attrsAtaque);
+            let fisP = getProm(attrsFisico);
+
+            document.getElementById("total-defensa").innerText = defP;
+            document.getElementById("total-ataque").innerText = atkP;
+            document.getElementById("total-fisico").innerText = fisP;
+
+            let sumaTotal = attrsCampo.reduce((acc, id) => acc + (parseFloat(document.getElementById(id).value) || 0), 0);
+            let gen = sumaTotal > 0 ? (sumaTotal / 21).toFixed(1) : "";
+            
+            if(gen !== "") {
+                document.getElementById("j-gen").value = gen;
+                document.getElementById("j-stars").innerHTML = generarEstrellas(gen);
+            } else {
+                document.getElementById("j-stars").innerHTML = '<span class="estrella-amarilla">★</span>';
+            }
+        }
+
+        function autoCalcularGenGK() {
+            const getProm = (arr) => {
+                const vals = arr.map(id => parseFloat(document.getElementById(id).value) || 0);
+                const suma = vals.reduce((a, b) => a + b, 0);
+                return suma > 0 ? (suma / arr.length).toFixed(1) : 0;
+            };
+
+            document.getElementById("total-gk-def").innerText = getProm(['gk_reflejos', 'gk_agilidad', 'gk_anticipacion', 'gk_salidas', 'gk_comunicacion']);
+            document.getElementById("total-gk-atk").innerText = getProm(['gk_saque_mano', 'gk_saque_pie', 'gk_punos', 'gk_alcance', 'gk_concentracion']);
+            document.getElementById("total-gk-fis").innerText = getProm(['gk_forma', 'gk_fuerza', 'gk_agresividad', 'gk_velocidad', 'gk_creatividad']);
+
+            let sumaTotal = attrsGK.reduce((acc, id) => acc + (parseFloat(document.getElementById(id).value) || 0), 0);
+            let gen = sumaTotal > 0 ? (sumaTotal / 15).toFixed(1) : "";
+            
+            if(gen !== "") {
+                document.getElementById("gk-gen").value = gen;
+                document.getElementById("gk-stars").innerHTML = generarEstrellas(gen);
+            } else {
+                document.getElementById("gk-stars").innerHTML = '<span class="estrella-amarilla">★</span>';
+            }
+        }
+
+        function actualizarYCalcular() {
+            autoCalcularGen();
+            actualizarGrafica();
+        }
+
+        let jugadoresVestuario = JSON.parse(localStorage.getItem('te_vestuario')) || [
+            { nombre: "Cristiano Ronaldo", edad: 18, gen: 181.3, rol: "ST", x: 50, y: 25, data: { pases: 190, disparos: 260, definicion: 250, resistencia: 180, fuerza: 160, velocidad: 240, creatividad: 200 } }
+        ];
+
+        const defaultCoords = [
+            { x: 50, y: 88 }, { x: 20, y: 72 }, { x: 40, y: 74 }, { x: 60, y: 74 }, { x: 80, y: 72 },
+            { x: 20, y: 48 }, { x: 40, y: 52 }, { x: 60, y: 52 }, { x: 80, y: 48 }, { x: 38, y: 25 }, { x: 62, y: 25 }
+        ];
+
+        function obtenerClaseRol(rol) {
+            if (rol === 'ST') return 'ST';
+            if (['AML', 'AMR', 'AMC'].includes(rol)) return 'ATQ';
+            if (['ML', 'MC', 'MR', 'DMC', 'DML', 'DMR'].includes(rol)) return 'MED';
+            if (['DL', 'DC', 'DR'].includes(rol)) return 'DEF';
+            if (rol === 'GK') return 'GK';
+            return 'MED';
+        }
+
+        function guardarEnLocalStorage() {
+            localStorage.setItem('te_vestuario', JSON.stringify(jugadoresVestuario));
+            actualizarSelectRapido();
+        }
+
+        function actualizarSelectRapido() {
+            const select = document.getElementById("select-jugador-rapido");
+            if(!select) return;
+            select.innerHTML = '<option value="">-- Selecciona un jugador --</option>';
+            jugadoresVestuario.forEach((j, index) => {
+                const opt = document.createElement("option");
+                opt.value = index;
+                opt.textContent = `${j.nombre} (${j.rol} - ${j.gen}%)`;
+                select.appendChild(opt);
+            });
+        }
+
+        function seleccionarJugadorDesdeBarra(index) {
+            if(index === "") return;
+            cargarJugadorDirecto(parseInt(index));
+        }
+
+        function renderCampoAlineacion() {
+            const field = document.getElementById("football-field-container");
+            if(!field) return;
+            
+            field.innerHTML = `
+                <div class="center-circle"></div>
+                <div class="penalty-box-top"></div>
+                <div class="penalty-box-bottom"></div>
+            `;
+
+            jugadoresVestuario.forEach((j, index) => {
+                if(j.x === undefined || j.y === undefined) {
+                    let def = defaultCoords[index % defaultCoords.length];
+                    j.x = def.x;
+                    j.y = def.y;
+                }
+
+                let rolClase = obtenerClaseRol(j.rol);
+                const div = document.createElement("div");
+                div.className = `field-player fp-${rolClase}`;
+                div.style.left = `${j.x}%`;
+                div.style.top = `${j.y}%`;
+                div.innerHTML = `
+                    <span class="fp-name">${j.nombre} (${j.rol})</span>
+                    <div class="fp-stars">${generarEstrellas(j.gen)}</div>
+                `;
+
+                let activeDrag = false;
+                div.addEventListener('pointerdown', (e) => {
+                    activeDrag = true;
+                    div.setPointerCapture(e.pointerId);
+                    e.stopPropagation();
+                });
+                div.addEventListener('pointermove', (e) => {
+                    if (!activeDrag) return;
+                    const rect = field.getBoundingClientRect();
+                    let x = ((e.clientX - rect.left) / rect.width) * 100;
+                    let y = ((e.clientY - rect.top) / rect.height) * 100;
+                    j.x = Math.max(5, Math.min(95, x));
+                    j.y = Math.max(5, Math.min(95, y));
+                    div.style.left = `${j.x}%`;
+                    div.style.top = `${j.y}%`;
+                });
+                div.addEventListener('pointerup', (e) => {
+                    if (activeDrag) { activeDrag = false; div.releasePointerCapture(e.pointerId); guardarEnLocalStorage(); }
+                });
+                div.ondblclick = (e) => { e.stopPropagation(); cargarJugadorDirecto(index); };
+                field.appendChild(div);
+            });
+        }
+
+        function renderVestuario() {
+            const container = document.getElementById("vestuario-container");
+            if(!container) return;
+            container.innerHTML = "";
+            
+            const addCard = document.createElement("div");
+            addCard.className = "player-card rol-ADD";
+            addCard.onclick = irANuevoJugador;
+            addCard.innerHTML = `
+                <div style="font-size: 36px; color: var(--accent-pro); margin-bottom: 5px;">➕</div>
+                <h4 style="color: var(--accent-pro); margin: 0;">Nuevo Jugador</h4>
+                <span class="edad-text" style="margin-top: 5px;">Registrar en plantilla</span>
+            `;
+            container.appendChild(addCard);
+
+            jugadoresVestuario.forEach((jugador, index) => {
+                let rolClase = obtenerClaseRol(jugador.rol);
+                const card = document.createElement("div");
+                card.className = `player-card rol-${rolClase}`;
+                card.innerHTML = `
+                    <span class="rol-tag bg-${rolClase}">${jugador.rol}</span>
+                    <h4>${jugador.nombre}</h4>
+                    <div class="stars-container">${generarEstrellas(jugador.gen)}</div>
+                    <span class="gen-text">${jugador.gen}% GEN</span>
+                    <span class="edad-text">${jugador.edad} años</span>
+                    <div class="player-actions">
+                        <button class="btn-card btn-load" onclick="cargarJugadorDirecto(${index})">Cargar</button>
+                        <button class="btn-card btn-delete" onclick="eliminarJugador(${index})">❌</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            actualizarSelectRapido();
+            renderCampoAlineacion();
+        }
+
+        function cargarJugadorDirecto(index) {
+            const j = jugadoresVestuario[index];
+            if(j.rol === 'GK') {
+                limpiarAtributosGK();
+                document.getElementById("gk-nombre").value = j.nombre || "";
+                document.getElementById("gk-edad").value = j.edad || "";
+                document.getElementById("gk-gen").value = j.gen || "";
+                for (let key in j.data) { if(document.getElementById(key)) document.getElementById(key).value = j.data[key]; }
+                autoCalcularGenGK();
+                switchTabTo('porteros', 2);
+            } else {
+                limpiarAtributosCampo();
+                document.getElementById("j-nombre").value = j.nombre || "";
+                document.getElementById("j-edad").value = j.edad || "";
+                document.getElementById("j-gen").value = j.gen || "";
+                document.getElementById("j-rol").value = j.rol || "ST";
+
+                for (let key in j.data) { if(document.getElementById(key)) document.getElementById(key).value = j.data[key]; }
+                actualizarYCalcular();
+                switchTabTo('calculadora', 1);
+                document.getElementById("select-jugador-rapido").value = index;
+            }
+        }
+
+        function switchTabTo(tabId, btnIndex) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            document.querySelectorAll('.tab-btn')[btnIndex].classList.add('active');
+        }
+
+        function guardarJugador() {
+            const nombre = document.getElementById("j-nombre").value.trim();
+            if(!nombre) { alert("⚠️ Por favor, ingresa el Nombre del Jugador."); return; }
+            
+            const edad = document.getElementById("j-edad").value;
+            const rol = document.getElementById("j-rol").value;
+            
+            if(rol === 'GK') {
+                document.getElementById("gk-nombre").value = nombre;
+                document.getElementById("gk-edad").value = edad;
+                switchTabTo('porteros', 2);
+                alert("ℹ️ Has seleccionado Portero (GK). Ingresa sus datos en la pestaña de Porteros.");
+                return;
+            }
+
+            autoCalcularGen(); 
+            const gen = document.getElementById("j-gen").value;
+
+            const data = {};
+            attrsCampo.forEach(id => {
+                const val = document.getElementById(id).value;
+                if(val !== "") data[id] = parseFloat(val);
+            });
+
+            const index = jugadoresVestuario.findIndex(j => j.nombre.toLowerCase() === nombre.toLowerCase());
+            if (index >= 0) {
+                jugadoresVestuario[index].edad = edad;
+                jugadoresVestuario[index].rol = rol;
+                jugadoresVestuario[index].gen = gen;
+                jugadoresVestuario[index].data = data;
+            } else {
+                let def = defaultCoords[jugadoresVestuario.length % defaultCoords.length];
+                jugadoresVestuario.push({ nombre, edad, gen, rol, x: def.x, y: def.y, data });
+            }
+
+            guardarEnLocalStorage();
+            renderVestuario();
+            alert("✅ Jugador de campo guardado con éxito.");
+        }
+
+        function guardarPorteroDirecto() {
+            const nombre = document.getElementById("gk-nombre").value.trim();
+            if(!nombre) { alert("⚠️ Por favor, ingresa el Nombre del Portero."); return; }
+            const edad = document.getElementById("gk-edad").value;
+            autoCalcularGenGK(); 
+            const gen = document.getElementById("gk-gen").value;
+
+            const data = {};
+            attrsGK.forEach(id => {
+                const val = document.getElementById(id).value;
+                if(val !== "") data[id] = parseFloat(val);
+            });
+
+            const index = jugadoresVestuario.findIndex(j => j.nombre.toLowerCase() === nombre.toLowerCase());
+            if (index >= 0) {
+                jugadoresVestuario[index].edad = edad;
+                jugadoresVestuario[index].rol = "GK";
+                jugadoresVestuario[index].gen = gen;
+                jugadoresVestuario[index].data = data;
+            } else {
+                let def = defaultCoords[jugadoresVestuario.length % defaultCoords.length];
+                jugadoresVestuario.push({ nombre, edad, gen, rol: "GK", x: def.x, y: def.y, data });
+            }
+
+            guardarEnLocalStorage();
+            renderVestuario();
+            alert("✅ Portero guardado con éxito.");
+        }
+
+        function eliminarJugador(index) {
+            if(confirm("¿Eliminar jugador del vestuario?")) {
+                jugadoresVestuario.splice(index, 1);
+                guardarEnLocalStorage();
+                renderVestuario();
+            }
+        }
+
+        function irANuevoJugador() {
+            limpiarAtributosCampo();
+            document.getElementById("j-nombre").value = "";
+            document.getElementById("j-edad").value = "";
+            document.getElementById("j-rol").value = "ST";
+            document.getElementById("select-jugador-rapido").value = "";
+            switchTabTo('calculadora', 1);
+        }
+
+        function limpiarAtributosCampo() {
+            attrsCampo.forEach(key => { if(document.getElementById(key)) document.getElementById(key).value = ""; });
+            document.getElementById("j-stars").innerHTML = '<span class="estrella-amarilla">★</span>';
+            autoCalcularGen();
+        }
+
+        function limpiarAtributosGK() {
+            attrsGK.forEach(key => { if(document.getElementById(key)) document.getElementById(key).value = ""; });
+            document.getElementById("gk-stars").innerHTML = '<span class="estrella-amarilla">★</span>';
+            autoCalcularGenGK();
+        }
+
+        let radarChart;
+        function initChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Ataque', 'Defensa', 'Físico'],
+                    datasets: [{ label: 'Promedio Categoría', data: [0, 0, 0], backgroundColor: 'rgba(157, 78, 221, 0.4)', borderColor: '#c77dff', pointBackgroundColor: '#00ff88', borderWidth: 2 }]
+                },
+                options: {
+                    scales: { r: { angleLines: { color: 'rgba(255, 255, 255, 0.1)' }, grid: { color: 'rgba(255, 255, 255, 0.1)' }, pointLabels: { color: '#f0f6ff', font: { size: 14, family: 'Teko' } }, ticks: { display: false, min: 0, max: 250 } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function actualizarGrafica() {
+            const getP = (arr) => { const v = arr.map(id => parseFloat(document.getElementById(id).value) || 0); return v.reduce((a, b) => a + b, 0) / v.length; };
+            let atkVal = getP(attrsAtaque);
+            let defVal = getP(attrsDefensa);
+            let fisVal = getP(attrsFisico);
+
+            radarChart.data.datasets[0].data = [atkVal, defVal, fisVal];
+            radarChart.update();
+        }
+
+        function obtenerClaseColorEjercicio(nombre) {
+            const n = nombre.toLowerCase();
+            if (n.includes('contra') || n.includes('disparo') || n.includes('bandas') || n.includes('1 contra 1') || n.includes('pasa y dispara')) return 'ej-ataque';
+            if (n.includes('presion') || n.includes('detener') || n.includes('centros') || n.includes('línea') || n.includes('cabeza')) return 'ej-defensa';
+            if (n.includes('calentamiento') || n.includes('estiramiento') || n.includes('sprint') || n.includes('gimnasio') || n.includes('carrera')) return 'ej-fisico';
+            return 'ej-posesion'; 
+        }
+
+        const listaCompletaDrills = [
+            { nombre: "Contrataque Rápido", sub: "Fast Counter-Attacks", costo: 3.75, cat: "ataque" },
+            { nombre: "Técnica de Disparo", sub: "Shooting Technique", costo: 2.25, cat: "ataque" },
+            { nombre: "Juego por las Bandas", sub: "Wing Play", costo: 3.0, cat: "ataque" },
+            { nombre: "1 contra 1", sub: "1-on-1 Finishing", costo: 1.5, cat: "ataque" },
+            { nombre: "Pasa y Dispara", sub: "Pass, Go & Shoot", costo: 1.5, cat: "ataque" },
+            { nombre: "Presionar el Balón", sub: "Press the Play", costo: 3.0, cat: "defensa" },
+            { nombre: "Detener al Atacante", sub: "Stop the Attacker", costo: 2.25, cat: "defensa" },
+            { nombre: "Defensa de Centros", sub: "Defending Crosses", costo: 2.25, cat: "defensa" },
+            { nombre: "Línea Defensiva", sub: "Hold the Line", costo: 2.25, cat: "defensa" },
+            { nombre: "Control de Balón", sub: "Piggy in the Middle", costo: 1.5, cat: "defensa" },
+            { nombre: "Uso de la Cabeza", sub: "Use Your Head", costo: 1.5, cat: "defensa" },
+            { nombre: "Calentamiento", sub: "Warm-Up", costo: 0.75, cat: "fisico" },
+            { nombre: "Estiramientos", sub: "Stretch", costo: 1.5, cat: "fisico" },
+            { nombre: "Sprint", sub: "Sprint", costo: 3.75, cat: "fisico" },
+            { nombre: "Gimnasio", sub: "Gym", costo: 3.75, cat: "fisico" },
+            { nombre: "Análisis de Video", sub: "Video Analysis", costo: 0.75, cat: "fisico" },
+            { nombre: "Carrera Larga", sub: "Long Run", costo: 2.25, cat: "fisico" },
+            { nombre: "Rondos de Posesión", sub: "Rondos", costo: 1.5, cat: "posesion" },
+            { nombre: "Juego de Pases", sub: "Passing Drill", costo: 1.5, cat: "posesion" },
+            { nombre: "Coordinación y Vallas", sub: "Hurdle Jumps", costo: 3.0, cat: "posesion" }
+        ];
+
+        function generarRutina() {
+            const v = id => parseFloat(document.getElementById(id).value) || 0;
+            const attrs = {};
+            attrsCampo.forEach(id => attrs[id] = v(id));
+            
+            let drillsConValores = listaCompletaDrills.map(d => {
+                let vals = [attrs.resistencia, attrs.velocidad, attrs.pases];
+                if(d.cat === 'ataque') vals = [attrs.disparos, attrs.definicion, attrs.dribble, attrs.centros];
+                if(d.cat === 'defensa') vals = [attrs.entradas, attrs.marcaje, attrs.colocacion, attrs.cabeza, attrs.valentia];
+                if(d.cat === 'fisico') vals = [attrs.resistencia, attrs.fuerza, attrs.velocidad, attrs.agresividad];
+                if(d.cat === 'posesion') vals = [attrs.pases, attrs.creatividad, attrs.colocacion];
+                
+                let promedio = vals.reduce((a, b) => a + b, 0) / vals.length;
+                return { ...d, promedio };
+            });
+
+            drillsConValores.sort((a, b) => a.promedio - b.promedio);
+            const rutina = drillsConValores.filter(d => d.promedio < 140).slice(0, 6);
+            
+            const c = document.getElementById("slots-container"); c.innerHTML = "";
+            let coste = 0;
+            if (rutina.length === 0) { c.innerHTML = "<p style='color:var(--accent-red);'>⚠️ El jugador tiene atributos muy altos.</p>"; return; }
+            
+            rutina.forEach(d => {
+                coste += d.costo;
+                const claseColor = obtenerClaseColorEjercicio(d.nombre);
+                const slot = document.createElement("div"); slot.className = "slot";
+                slot.innerHTML = `
+                    <div class="slot-name ${claseColor}">${d.nombre}</div>
+                    <span class="slot-subname">(${d.sub})</span>
+                    <div class="slot-stats">${d.promedio.toFixed(1)}% | ⚡ -${d.costo}%</div>
+                `;
+                c.appendChild(slot);
+            });
+            document.getElementById("energy-display").innerText = `🔋 Coste de Condición: -${coste.toFixed(2)}%`;
+        }
+
+        function calcularCampo() {
+            const v = id => parseFloat(document.getElementById(id).value) || 0;
+            const attrs = {};
+            attrsCampo.forEach(id => attrs[id] = v(id));
+
+            let drillsConValores = listaCompletaDrills.map(d => {
+                let vals = [attrs.resistencia, attrs.velocidad, attrs.pases];
+                if(d.cat === 'ataque') vals = [attrs.disparos, attrs.definicion, attrs.dribble, attrs.centros];
+                if(d.cat === 'defensa') vals = [attrs.entradas, attrs.marcaje, attrs.colocacion, attrs.cabeza, attrs.valentia];
+                if(d.cat === 'fisico') vals = [attrs.resistencia, attrs.fuerza, attrs.velocidad, attrs.agresividad];
+                if(d.cat === 'posesion') vals = [attrs.pases, attrs.creatividad, attrs.colocacion];
+                
+                let promedio = vals.reduce((a, b) => a + b, 0) / vals.length;
+                return { ...d, promedio };
+            });
+
+            renderTabla(drillsConValores, "#tabla-campo tbody");
+            calcularMatriz();
+        }
+
+        function calcularPortero() {
+            const v = id => parseFloat(document.getElementById(id).value) || 0;
+            const gk = {
+                reflejos: v('gk_reflejos'), agilidad: v('gk_agilidad'), anticipacion: v('gk_anticipacion'),
+                salidas: v('gk_salidas'), comunicacion: v('gk_comunicacion'), saque_mano: v('gk_saque_mano'),
+                saque_pie: v('gk_saque_pie'), punos: v('gk_punos'), alcance: v('gk_alcance'),
+                concentracion: v('gk_concentracion'), forma: v('gk_forma'), fuerza: v('gk_fuerza'),
+                agresividad: v('gk_agresividad'), velocidad: v('gk_velocidad'), creatividad: v('gk_creatividad')
+            };
+
+            let drillsGk = listaCompletaDrills.map(d => {
+                let vals = [gk.reflejos, gk.agilidad, gk.anticipacion];
+                if(d.cat === 'ataque') vals = [gk.reflejos, gk.agilidad];
+                if(d.cat === 'defensa') vals = [gk.anticipacion, gk.salidas, gk.comunicacion];
+                if(d.cat === 'fisico') vals = [gk.forma, gk.fuerza, gk.velocidad];
+                if(d.cat === 'posesion') vals = [gk.saque_mano, gk.saque_pie, gk.concentracion];
+
+                let promedio = vals.reduce((a, b) => a + b, 0) / vals.length;
+                return { ...d, promedio };
+            });
+
+            renderTabla(drillsGk, "#tabla-portero tbody");
+        }
+
+        function renderTabla(drills, selector) {
+            drills.sort((a, b) => a.promedio - b.promedio);
+            const tbody = document.querySelector(selector);
+            tbody.innerHTML = "";
+
+            drills.forEach(d => {
+                let clase = "", estado = "";
+                if (d.promedio < 100) { clase = "excelente"; estado = "🔥 EXCELENTE"; }
+                else if (d.promedio < 140) { clase = "bueno"; estado = "⚡ BUENO"; }
+                else { clase = "ineficaz"; estado = "⚠️ INEFICAZ"; }
+
+                const claseColor = obtenerClaseColorEjercicio(d.nombre);
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>
+                        <div class="td-drill-name ${claseColor}">${d.nombre}</div>
+                        <span class="td-drill-sub">(${d.sub})</span>
+                    </td>
+                    <td>${d.promedio.toFixed(1)}%</td>
+                    <td class="${clase}">${estado}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function calcularSimuladorRests() {
+            const rests = parseFloat(document.getElementById('sim-rests').value) || 0;
+            const coste = parseFloat(document.getElementById('sim-coste').value) || 10;
+            if(rests <= 0 || coste <= 0) {
+                document.getElementById('sim-resultado').innerText = `✨ Ingresa valores válidos para calcular.`;
+                return;
+            }
+            const sesiones = Math.floor((rests * 100) / (coste * 15)); 
+            document.getElementById('sim-resultado').innerText = `✨ Con ${rests} paquetes puedes realizar aprox. ${sesiones} sesiones completas de entrenamiento.`;
+        }
+
+        function calcularProyeccionEdad() {
+            const edad = parseInt(document.getElementById('proy-edad').value) || 18;
+            let res = "";
+            if(edad <= 21) res = "🔥 Perfil: Fast Trainer Óptimo (Crecimiento de atributos x2.5 por descanso).";
+            else if(edad <= 25) res = "⚡ Perfil: Crecimiento Normal / Estándar (x1.5).";
+            else res = "⚠️ Perfil: Veterano / Crecimiento Lento (x1.0 - Mayor gasto de rests).";
+            document.getElementById('proy-resultado').innerText = res;
+        }
+
+        window.onload = function() {
+            initChart();
+            renderVestuario();
+            autoCalcularGen();
+            autoCalcularGenGK();
+        };
+    </script>
+</body>
+</html>
